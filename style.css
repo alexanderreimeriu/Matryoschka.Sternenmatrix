@@ -1,20 +1,32 @@
 body {
-  background-color: #0e0e0e;
-  color: #fff;
+  margin: 0;
+  padding: 0;
   font-family: 'Inter', sans-serif;
-  display: flex;
-  justify-content: center;
-  padding: 20px;
+  background: url('assets/background.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: white;
+  text-align: center;
 }
 
 .main-wrapper {
-  text-align: center;
+  padding: 30px;
+  background-color: rgba(0, 0, 0, 0.7);
+  margin: 30px auto;
+  max-width: 800px;
+  border-radius: 15px;
 }
 
 input, button {
   padding: 10px;
   margin: 10px;
   font-size: 1rem;
+}
+
+button {
+  background-color: #ffd700;
+  color: #000;
+  border: none;
+  cursor: pointer;
 }
 
 .matrix-container {
@@ -26,11 +38,16 @@ input, button {
 }
 
 .star-block {
-  background: radial-gradient(circle at top left, #1c1c44, #000);
+  background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
   border-radius: 20px;
   padding: 20px;
   width: 200px;
   box-shadow: 0 0 10px #00bfff;
+  transition: transform 0.3s;
+}
+
+.star-block:hover {
+  transform: scale(1.05);
 }
 
 .star-block h2 {
@@ -47,6 +64,6 @@ input, button {
 }
 
 .special {
-  background: radial-gradient(circle at center, #ffd700, #8b0000);
+  background: radial-gradient(circle, #ffd700, #8b0000);
   box-shadow: 0 0 20px #ff4500;
 }

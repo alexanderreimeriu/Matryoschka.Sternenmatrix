@@ -42,7 +42,7 @@ function calculateMatrix() {
   const stars = [];
 
   for (let i = 0; i < starNames.length; i++) {
-    const subVals = calculateSubValues([...digits, i]); // leicht variiert je Stern
+    const subVals = calculateSubValues([...digits, i]);
     stars.push({
       name: starNames[i],
       values: subVals
