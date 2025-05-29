@@ -1,67 +1,74 @@
 const starNames = [
   "Путь", "Сущность", "Карма", "Дар", "Задача", "Опора",
   "Память", "Предназначение", "Сила Рода", "Боль Души",
-  "Обретение Себя", "РОКОВАЯ ОШИБКА", "Будущее", "Служение"
+  "Обретение Себя", "РОКОВАЯ ОШИБКА"
 ];
 
 function getDigits(dateStr) {
   return dateStr.replace(/-/g, '').split('').map(Number);
 }
 
-function sumDigits(array) {
-  return array.reduce((a, b) => a + b, 0);
+function sum(arr) {
+  return arr.reduce((a, b) => a + b, 0);
 }
 
-function reduceToDigit(n) {
+function reduceTo22(n) {
   while (n > 22) {
     n = n.toString().split('').reduce((a, b) => a + Number(b), 0);
   }
   return n;
 }
 
-function calculateMatrix() {
-  const birthInput = document.getElementById("birthdate").value;
-  const starsContainer = document.getElementById("stars");
-  starsContainer.innerHTML = "";
+function calculateSubValues(baseArray) {
+  const values = [];
+  values.push(sum(baseArray));
+  values.push(reduceTo22(values[0]));
+  values.push(reduceTo22(baseArray[0] + baseArray[1]));
+  values.push(reduceTo22(baseArray[2] + baseArray[3]));
+  return values;
+}
 
-  if (!birthInput) {
-    alert("Пожалуйста, введите дату.");
+function calculateMatrix() {
+  const input = document.getElementById("birthdate").value;
+  const container = document.getElementById("matrix-container");
+  container.innerHTML = "";
+
+  if (!input) {
+    alert("Введите дату рождения");
     return;
   }
 
-  const digits = getDigits(birthInput); // Alle Ziffern aus TTMMJJJJ
-  const A = sumDigits(digits);
-  const B = reduceToDigit(A);
-  const C = reduceToDigit(digits[0] + digits[1] + digits[2]); // Beispiel-Logik
-  const D = reduceToDigit(digits[3] + digits[4] + digits[5]);
+  const digits = getDigits(input);
+  const stars = [];
 
-  const matrix = [
-    reduceToDigit(A),   // Путь
-    reduceToDigit(B),   // Сущность
-    reduceToDigit(C),   // Карма
-    reduceToDigit(D),   // Дар
-    reduceToDigit(B + C), // Задача
-    reduceToDigit(C + D), // Опора
-    reduceToDigit(A + B), // Память
-    reduceToDigit(C + B), // Предназначение
-    reduceToDigit(A + D), // Сила Рода
-    reduceToDigit(B + D), // Боль Души
-    reduceToDigit(B + C + D), // Обретение себя
-    reduceToDigit(C + D + A), // РОКОВАЯ ОШИБКА
-    // die restlichen lassen wir aus
-  ];
+  for (let i = 0; i < starNames.length; i++) {
+    const subVals = calculateSubValues([...digits, i]); // leicht variiert je Stern
+    stars.push({
+      name: starNames[i],
+      values: subVals
+    });
 
-  for (let i = 0; i < matrix.length; i++) {
-    const star = document.createElement("div");
-    star.classList.add("star");
-    star.innerText = `${starNames[i]}: ${matrix[i]}`;
-
-    if (starNames[i] === "РОКОВАЯ ОШИБКА") {
-      star.classList.add("special");
-      starsContainer.appendChild(star);
-      break;
-    }
-
-    starsContainer.appendChild(star);
+    if (starNames[i] === "РОКОВАЯ ОШИБКА") break;
   }
+
+  stars.forEach(star => {
+    const div = document.createElement("div");
+    div.className = "star-block";
+    if (star.name === "РОКОВАЯ ОШИБКА") div.classList.add("special");
+
+    const title = document.createElement("h2");
+    title.textContent = star.name;
+    div.appendChild(title);
+
+    const sub = document.createElement("div");
+    sub.className = "sub-values";
+    star.values.forEach(v => {
+      const span = document.createElement("span");
+      span.textContent = v;
+      sub.appendChild(span);
+    });
+
+    div.appendChild(sub);
+    container.appendChild(div);
+  });
 }
