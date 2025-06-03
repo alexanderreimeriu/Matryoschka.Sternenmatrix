@@ -3,18 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Сферы Матрицы</title>
+  <title>Ввод даты рождения</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="main-wrapper">
-    <h1>Введите дату рождения</h1>
-    <input type="date" id="birthdate" />
-    <button onclick="calculateMatrix()">Показать звезды</button>
-
-    <div class="star-boxes" id="matrix-container"></div>
+  <div class="start-wrapper">
+    <div class="start-box">
+      <h1>Введите дату рождения</h1>
+      <input type="date" id="birthdate" />
+      <button onclick="submitBirthdate()">Далее</button>
+    </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    function submitBirthdate() {
+      const date = document.getElementById("birthdate").value;
+      if (!date) {
+        alert("Пожалуйста, введите дату рождения.");
+        return;
+      }
+      localStorage.setItem("birthdate", date);
+      window.location.href = "matrix.html";
+    }
+  </script>
 </body>
 </html>

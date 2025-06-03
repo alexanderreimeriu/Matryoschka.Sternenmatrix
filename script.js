@@ -1,5 +1,4 @@
- <script>
-    function getDigits(dateStr) {
+ function getDigits(dateStr) {
   return dateStr.replace(/-/g, '').split('').map(Number);
 }
 
@@ -14,18 +13,8 @@ function reduceTo22(n) {
   return n;
 }
 
-function calculateMatrix() {
-  const input = document.getElementById("birthdate").value;
-  const container = document.getElementById("matrix-container");
-
-  container.innerHTML = "";
-
-  if (!input) {
-    alert("Введите дату рождения");
-    return;
-  }
-
-  const digits = getDigits(input);
+function calculateMatrixFromDate(date) {
+  const digits = getDigits(date);
   const values = [];
 
   for (let i = 0; i < 12; i++) {
@@ -35,6 +24,13 @@ function calculateMatrix() {
     const d = reduceTo22(b + c);
     values.push({ name: `Сфера ${i + 1}`, all: [a, b, c, d] });
   }
+
+  return values;
+}
+
+function renderMatrix(values) {
+  const container = document.getElementById("matrix-container");
+  container.innerHTML = "";
 
   values.forEach((star) => {
     const box = document.createElement("div");
@@ -56,4 +52,13 @@ function calculateMatrix() {
     container.appendChild(box);
   });
 }
-  </script>
+
+if (window.location.pathname.includes("matrix")) {
+  const storedDate = localStorage.getItem("birthdate");
+  if (storedDate) {
+    const matrix = calculateMatrixFromDate(storedDate);
+    renderMatrix(matrix);
+  } else {
+    document.getElementById("matrix-container").innerHTML = "<p>Дата не найдена. Пожалуйста, начните с главной страницы.</p>";
+  }
+}
