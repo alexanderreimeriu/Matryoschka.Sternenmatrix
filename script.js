@@ -1,4 +1,4 @@
- function getDigits(dateStr) {
+function getDigits(dateStr) {
   return dateStr.replace(/-/g, '').split('').map(Number);
 }
 
@@ -53,13 +53,19 @@ function renderMatrix(values) {
   });
 }
 
-if (window.location.pathname.includes("matrix")) {
-  const storedDate = localStorage.getItem("birthdate");
-  if (storedDate) {
-    const matrix = calculateMatrixFromDate(storedDate);
-    renderMatrix(matrix);
-  } else {
-    document.getElementById("matrix-container").innerHTML =
-      "<p>Дата не найдена. Пожалуйста, начните с главной страницы.</p>";
+function submitBirthdate() {
+  const date = document.getElementById("birthdate").value;
+  if (!date) {
+    alert("Пожалуйста, введите дату рождения.");
+    return;
   }
+
+  const values = calculateMatrixFromDate(date);
+
+  document.getElementById("input-section").style.display = "none";
+  const matrixContainer = document.getElementById("matrix-container");
+  matrixContainer.style.display = "flex";
+
+  renderMatrix(values);
 }
+
