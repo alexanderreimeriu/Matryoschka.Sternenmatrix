@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Звезда Матрица</title>
-  </head>
+  <title>Сферы Матрицы</title>
+  <link rel="stylesheet" href="style.css">
+</head>
 <body>
   <div class="main-wrapper">
     <h1>Введите дату рождения</h1>
@@ -12,21 +13,8 @@
     <button onclick="calculateMatrix()">Показать звезды</button>
 
     <div class="star-boxes" id="matrix-container"></div>
-
-    <h2>Символическая звезда</h2>
-    <svg id="star-svg" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="250,20 400,190 325,470 175,470 100,190" 
-               fill="none" stroke="white" stroke-width="2" />
-      <polygon points="250,150 330,200 300,300 200,300 170,200" 
-               fill="none" stroke="white" stroke-width="1" />
-
-      <text id="p1" x="245" y="15" font-size="16" fill="white">?</text>
-      <text id="p2" x="410" y="190" font-size="16" fill="white">?</text>
-      <text id="p3" x="340" y="480" font-size="16" fill="white">?</text>
-      <text id="p4" x="140" y="480" font-size="16" fill="white">?</text>
-      <text id="p5" x="70"  y="190" font-size="16" fill="white">?</text>
-      <text id="pc" x="245" y="260" font-size="20" fill="white">?</text>
-    </svg>
   </div>
-  </body>
+
+  <script src="script.js"></script>
+</body>
 </html>
