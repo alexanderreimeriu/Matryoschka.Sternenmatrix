@@ -1,30 +1,23 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ввод даты рождения</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Матрица Судьбы</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="start-wrapper">
-    <div class="start-box">
+  <div class="main-wrapper">
+    <div class="start-box" id="input-section">
       <h1>Введите дату рождения</h1>
       <input type="date" id="birthdate" />
       <button onclick="submitBirthdate()">Далее</button>
     </div>
+
+    <div class="matrix-boxes" id="matrix-container" style="display: none;"></div>
   </div>
 
-  <script>
-    function submitBirthdate() {
-      const date = document.getElementById("birthdate").value;
-      if (!date) {
-        alert("Пожалуйста, введите дату рождения.");
-        return;
-      }
-      localStorage.setItem("birthdate", date);
-      window.location.href = "matrix.html";
-    }
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
+

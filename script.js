@@ -59,6 +59,7 @@ if (window.location.pathname.includes("matrix")) {
     const matrix = calculateMatrixFromDate(storedDate);
     renderMatrix(matrix);
   } else {
-    document.getElementById("matrix-container").innerHTML = "<p>Дата не найдена. Пожалуйста, начните с главной страницы.</p>";
+    document.getElementById("matrix-container").innerHTML =
+      "<p>Дата не найдена. Пожалуйста, начните с главной страницы.</p>";
   }
 }
