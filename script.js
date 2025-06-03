@@ -1,71 +1,145 @@
-function getDigits(dateStr) {
-  return dateStr.replace(/-/g, '').split('').map(Number);
-}
+function showMatrix() {
+  const dateInput = document.getElementById('birthdate').value;
+  const container = document.getElementById('matrix-container');
+  container.innerHTML = '';
 
-function sum(arr) {
-  return arr.reduce((a, b) => a + b, 0);
-}
-
-function reduceTo22(n) {
-  while (n > 22) {
-    n = n.toString().split('').reduce((a, b) => a + Number(b), 0);
+  if (!dateInput) {
+    alert('Пожалуйста, введите дату рождения');
+    return;
   }
-  return n;
+
+  const birthDate = new Date(dateInput);
+  const day = birthDate.getDate();
+  const month = birthDate.getMonth() + 1;
+  const year = birthDate.getFullYear();
+
+  const allDigits = [...`${day < 10 ? '0' : ''}${day}`, `${month < 10 ? '0' : ''}${month}`, `${year}`]
+    .join('')
+    .split('')
+    .map(Number);
+
+  const values = calculateFullStarMatrix(allDigits);
+
+  const sphereNames = [
+    'Сфера 1: Предназначение тела',
+    'Сфера 2: Энергия души',
+    'Сфера 3: Кармическая задача',
+    'Сфера 4: Социальная реализация',
+    'Сфера 5: Личное развитие',
+    'Сфера 6: Родовая энергия',
+    'Сфера 7: Энергия таланта'
+  ];
+
+  for (let i = 0; i < sphereNames.length; i++) {
+    const block = document.createElement('div');
+    block.className = 'star-block';
+
+    const heading = document.createElement('h3');
+    heading.textContent = sphereNames[i];
+    block.appendChild(heading);
+
+    const valuesDiv = document.createElement('div');
+    valuesDiv.className = 'sub-values';
+    values[i].forEach(v => {
+      const span = document.createElement('span');
+      span.textContent = v;
+      valuesDiv.appendChild(span);
+    });
+
+    block.appendChild(valuesDiv);
+    container.appendChild(block);
+  }
+
+  // Visualisierung starten
+  renderSVGStar(values);
 }
 
-function calculateMatrixFromDate(date) {
-  const digits = getDigits(date);
+function sumDigits(arr) {
+  return arr.reduce((sum, val) => sum + val, 0);
+}
+
+function reduceTo22(num) {
+  let result = num;
+  while (result > 22) {
+    result = result.toString().split('').reduce((a, b) => a + Number(b), 0);
+  }
+  return result === 0 ? 22 : result;
+}
+
+function calculateFullStarMatrix(digits) {
+  const sum1 = sumDigits(digits);
+  const sum2 = sumDigits(sum1.toString().split('').map(Number));
+  const sum3 = sumDigits([...digits, ...sum1.toString().split('').map(Number)]);
+  const sum4 = sumDigits(sum3.toString().split('').map(Number));
+
   const values = [];
 
-  for (let i = 0; i < 12; i++) {
-    const a = sum([...digits, i]);
-    const b = reduceTo22(a);
-    const c = reduceTo22(a + b);
-    const d = reduceTo22(b + c);
-    values.push({ name: `Сфера ${i + 1}`, all: [a, b, c, d] });
-  }
+  values.push([digits[0], digits[1], reduceTo22(sum1)]);
+  values.push([digits[2], digits[3], reduceTo22(sum2)]);
+  values.push([digits[4], digits[5], reduceTo22(sum3)]);
+  values.push([digits[6], digits[7], reduceTo22(sum4)]);
+  values.push([reduceTo22(sum1 + sum2), reduceTo22(sum3 + sum4), reduceTo22(sum1 + sum4)]);
+  values.push([reduceTo22(sum1 + sum3), reduceTo22(sum2 + sum4), reduceTo22(sum1 + sum2 + sum3 + sum4)]);
+  values.push([reduceTo22(sum1 * 2), reduceTo22(sum2 * 2), reduceTo22(sum1 + sum2)]);
 
   return values;
 }
 
-function renderMatrix(values) {
-  const container = document.getElementById("matrix-container");
-  container.innerHTML = "";
+function renderSVGStar(values) {
+  const svgContainer = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svgContainer.setAttribute("width", "400");
+  svgContainer.setAttribute("height", "400");
+  svgContainer.setAttribute("viewBox", "0 0 400 400");
+  svgContainer.classList.add("matrix-svg");
 
-  values.forEach((star) => {
-    const box = document.createElement("div");
-    box.className = "star-block";
+  const centerX = 200;
+  const centerY = 200;
+  const radius = 120;
+  const angleStep = (2 * Math.PI) / 7;
 
-    const title = document.createElement("h3");
-    title.textContent = star.name;
-    box.appendChild(title);
+  let points = [];
 
-    const sub = document.createElement("div");
-    sub.className = "sub-values";
-    star.all.forEach((v) => {
-      const span = document.createElement("span");
-      span.textContent = v;
-      sub.appendChild(span);
-    });
+  for (let i = 0; i < 7; i++) {
+    const angle = i * angleStep - Math.PI / 2;
+    const x = centerX + radius * Math.cos(angle);
+    const y = centerY + radius * Math.sin(angle);
+    points.push({ x, y });
 
-    box.appendChild(sub);
-    container.appendChild(box);
-  });
-}
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("cx", x);
+    circle.setAttribute("cy", y);
+    circle.setAttribute("r", "20");
+    circle.setAttribute("fill", "#f8f8f8");
+    circle.setAttribute("stroke", "#333");
+    circle.setAttribute("stroke-width", "1");
+    svgContainer.appendChild(circle);
 
-function submitBirthdate() {
-  const date = document.getElementById("birthdate").value;
-  if (!date) {
-    alert("Пожалуйста, введите дату рождения.");
-    return;
+    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute("x", x);
+    text.setAttribute("y", y + 5);
+    text.setAttribute("text-anchor", "middle");
+    text.setAttribute("font-size", "14");
+    text.textContent = values[i][2]; // Hauptwert der Sphäre
+    svgContainer.appendChild(text);
   }
 
-  const values = calculateMatrixFromDate(date);
+  // Linien zwischen Punkten
+  for (let i = 0; i < points.length; i++) {
+    const start = points[i];
+    const end = points[(i + 1) % points.length];
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", start.x);
+    line.setAttribute("y1", start.y);
+    line.setAttribute("x2", end.x);
+    line.setAttribute("y2", end.y);
+    line.setAttribute("stroke", "#999");
+    line.setAttribute("stroke-width", "1");
+    svgContainer.insertBefore(line, svgContainer.firstChild);
+  }
 
-  document.getElementById("input-section").style.display = "none";
-  const matrixContainer = document.getElementById("matrix-container");
-  matrixContainer.style.display = "flex";
+  const matrixWrapper = document.createElement("div");
+  matrixWrapper.classList.add("svg-wrapper");
+  matrixWrapper.appendChild(svgContainer);
 
-  renderMatrix(values);
+  document.getElementById("matrix-container").appendChild(matrixWrapper);
 }
-

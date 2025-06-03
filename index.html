@@ -1,23 +1,19 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Матрица Судьбы</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>СтернМатрица</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="main-wrapper">
-    <div class="start-box" id="input-section">
-      <h1>Введите дату рождения</h1>
-      <input type="date" id="birthdate" />
-      <button onclick="submitBirthdate()">Далее</button>
-    </div>
-
-    <div class="matrix-boxes" id="matrix-container" style="display: none;"></div>
+  <div class="container">
+    <h1>Введите дату рождения</h1>
+    <input type="date" id="birthdate">
+    <button onclick="showMatrix()">Показать Матрицу</button>
+    <div id="matrix-container"></div>
   </div>
 
   <script src="script.js"></script>
 </body>
 </html>
-
