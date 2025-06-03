@@ -1,74 +1,64 @@
-const starNames = [
-  "Путь", "Сущность", "Карма", "Дар", "Задача", "Опора",
-  "Память", "Предназначение", "Сила Рода", "Боль Души",
-  "Обретение Себя", "РОКОВАЯ ОШИБКА"
-];
+ <script>
+    function getDigits(dateStr) {
+      return dateStr.replace(/-/g, '').split('').map(Number);
+    }
 
-function getDigits(dateStr) {
-  return dateStr.replace(/-/g, '').split('').map(Number);
-}
+    function sum(arr) {
+      return arr.reduce((a, b) => a + b, 0);
+    }
 
-function sum(arr) {
-  return arr.reduce((a, b) => a + b, 0);
-}
+    function reduceTo22(n) {
+      while (n > 22) {
+        n = n.toString().split('').reduce((a, b) => a + Number(b), 0);
+      }
+      return n;
+    }
 
-function reduceTo22(n) {
-  while (n > 22) {
-    n = n.toString().split('').reduce((a, b) => a + Number(b), 0);
-  }
-  return n;
-}
+    function calculateMatrix() {
+      const input = document.getElementById("birthdate").value;
+      const container = document.getElementById("matrix-container");
+      const svgValues = ["p1", "p2", "p3", "p4", "p5", "pc"];
 
-function calculateSubValues(baseArray) {
-  const values = [];
-  values.push(sum(baseArray));
-  values.push(reduceTo22(values[0]));
-  values.push(reduceTo22(baseArray[0] + baseArray[1]));
-  values.push(reduceTo22(baseArray[2] + baseArray[3]));
-  return values;
-}
+      container.innerHTML = "";
 
-function calculateMatrix() {
-  const input = document.getElementById("birthdate").value;
-  const container = document.getElementById("matrix-container");
-  container.innerHTML = "";
+      if (!input) {
+        alert("Введите дату рождения");
+        return;
+      }
 
-  if (!input) {
-    alert("Введите дату рождения");
-    return;
-  }
+      const digits = getDigits(input);
+      const values = [];
 
-  const digits = getDigits(input);
-  const stars = [];
+      for (let i = 0; i < 12; i++) {
+        const a = sum([...digits, i]);
+        const b = reduceTo22(a);
+        const c = reduceTo22(a + b);
+        const d = reduceTo22(b + c);
+        values.push({ name: `Сфера ${i + 1}`, all: [a, b, c, d] });
+      }
 
-  for (let i = 0; i < starNames.length; i++) {
-    const subVals = calculateSubValues([...digits, i]);
-    stars.push({
-      name: starNames[i],
-      values: subVals
-    });
+      values.forEach((star, idx) => {
+        const box = document.createElement("div");
+        box.className = "star-block";
 
-    if (starNames[i] === "РОКОВАЯ ОШИБКА") break;
-  }
+        const title = document.createElement("h3");
+        title.textContent = star.name;
+        box.appendChild(title);
 
-  stars.forEach(star => {
-    const div = document.createElement("div");
-    div.className = "star-block";
-    if (star.name === "РОКОВАЯ ОШИБКА") div.classList.add("special");
+        const sub = document.createElement("div");
+        sub.className = "sub-values";
+        star.all.forEach(v => {
+          const span = document.createElement("span");
+          span.textContent = v;
+          sub.appendChild(span);
+        });
 
-    const title = document.createElement("h2");
-    title.textContent = star.name;
-    div.appendChild(title);
+        box.appendChild(sub);
+        container.appendChild(box);
 
-    const sub = document.createElement("div");
-    sub.className = "sub-values";
-    star.values.forEach(v => {
-      const span = document.createElement("span");
-      span.textContent = v;
-      sub.appendChild(span);
-    });
-
-    div.appendChild(sub);
-    container.appendChild(div);
-  });
-}
+        if (idx < svgValues.length) {
+          document.getElementById(svgValues[idx]).textContent = star.all[1];
+        }
+      });
+    }
+  </script>
